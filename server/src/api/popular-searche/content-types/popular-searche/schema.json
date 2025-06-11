@@ -1,0 +1,31 @@
+{
+  "kind": "singleType",
+  "collectionName": "popular_searches",
+  "info": {
+    "singularName": "popular-searche",
+    "pluralName": "popular-searches",
+    "displayName": "PopularSearch"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "label": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "href": {
+      "type": "string"
+    }
+  }
+}

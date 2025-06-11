@@ -1,0 +1,170 @@
+---
+title: "Automatizált ismétlődő feladatok: Produktivitási tippek fejlesztőknek"
+description: "Ebben a cikkben bemutatjuk, hogyan könnyítheted meg fejlesztői életedet az ismétlődő feladatok automatizálásával, és hogyan segít ebben a Tailwind tipográfiai pluginja."
+image: emile-perron-xrVDYZRGdw4-unsplash.jpg
+publishedAt: 2024-05-08 13:00:00
+updatedAt: 2024-05-08 13:00:00
+author: "codebucks"
+isPublished: true
+slug: automating-repetitive-tasks-productivity-hacks-for-developers
+tags:
+  - produktivitás
+  - fejlesztői-tippek
+  - automatizálás
+  - tailwindcss
+---
+
+Eddig egy cikk, dokumentum vagy blogbejegyzés Tailwind segítségével történő stilizálása fárasztó feladat volt, amely kifinomult tipográfiai érzéket és sok bonyolult egyedi CSS-t igényelt.
+
+Alapértelmezés szerint a Tailwind eltávolítja az összes alapértelmezett böngészőstílust a bekezdésekről, címsorokról, listákról és egyebekről. Ez végül nagyon hasznos az alkalmazásfelületek (UI-k) építésénél, mert kevesebb időt töltesz a felhasználói ügynök (user-agent) stílusok visszavonásával. De amikor tényleg csak egy olyan tartalmat próbálsz stilizálni, amely egy CMS rich-text szerkesztőjéből vagy egy markdown fájlból származik, ez meglepő és nem intuitív lehet.
+
+Valójában sok panaszt kapunk emiatt, és az emberek rendszeresen ilyeneket kérdeznek tőlünk:
+
+> Miért távolítja el a Tailwind az alapértelmezett stílusokat a h1 elemeimről? Hogyan tudom ezt letiltani? Hogy érted, hogy az összes többi alapstílust elveszítem?
+
+Hallunk titeket, de nem vagyunk meggyőződve arról, hogy valóban az alapstílusaink egyszerű letiltása az, amit akartok. Nem akarod, hogy minden alkalommal bosszantó margókat kelljen eltávolítanod, amikor egy `p` elemet használsz a műszerfalad felhasználói felületének egy darabjában. És kétlem, hogy valóban azt szeretnéd, hogy a blogbejegyzéseid a felhasználói ügynök stílusokat használják – azt akarod, hogy lenyűgözően nézzenek ki, ne pedig borzasztóan.
+
+A `@tailwindcss/typography` bővítmény a mi kísérletünk arra, hogy azt adjuk neked, amire valójában vágysz, anélkül, hogy olyan bonyolult workaroundokat kellene bevetned, mint az alapstílusok teljes letiltása.
+
+Hozzáad egy új `prose` osztályt, amelyet bármely natúr HTML tartalomblokkra rátehetsz, és gyönyörű, jól formázott dokumentummá alakíthatod:
+
+```jsx
+<article className="prose">
+  <h1>Fokhagymás kenyér sajttal: Mit mond a tudomány</h1>
+  <p>
+    Évek óta hangoztatják a szülők gyermekeiknek a sajtos fokhagymás kenyér egészségügyi előnyeit, az étel olyannyira ikonikus státuszt vívott ki kultúránkban, hogy a gyerekek Halloweenkor gyakran meleg, sajtos cipónak öltöznek.
+  </p>
+  <p>
+    Egy nemrégiben készült tanulmány azonban kimutatta, hogy a híres előétel összefüggésbe hozható az országban felbukkanó veszettség esetek sorozatával.
+  </p>
+</article>
+
+További információkért a bővítmény használatáról és a funkcióiról olvasd el a dokumentációt.
+Mire számíthatsz innentől kezdve
+
+Ami innen következik, az csak egy csomó teljesen értelmetlen szöveg, amit azért írtam, hogy magát a bővítményt „dogfoodingoljam” (élesben teszteljem). Minden ésszerű tipográfiai elemet tartalmaz, amire csak gondolni tudtam, mint például félkövér szöveg, dőlt betűs szöveg, rendezetlen listák, rendezett listák, kódblokkok, idézetblokkok.
+
+Fontos, hogy ezeket a felhasználási eseteket néhány okból lefedjük:
+
+    Azt akarjuk, hogy minden jól nézzen ki alapból.
+
+    Igazából csak az első ok, ez a bővítmény lényege.
+
+    Itt van egy harmadik, színlelt ok, bár egy három elemből álló lista valósághűbbnek tűnik, mint egy két elemből álló.
+
+Most kipróbálunk egy másik címsorstílust.
+A tipográfiának egyszerűnek kellene lennie
+
+Szóval ez egy címsor neked – ha szerencsénk van, és jól végeztük a dolgunkat, ez elég ésszerűen fog kinézni.
+
+Valami, amit egy bölcs ember egyszer mondott nekem a tipográfiáról:
+
+    A tipográfia nagyon fontos, ha nem akarod, hogy a tartalmad borzasztóan nézzen ki. Csináld jól, és nem lesz rossz.
+
+Valószínűleg az is fontos, hogy az képek is jól nézzenek ki alapból:
+
+<Image
+  src="/blogs/c-d-x-PDX_a_82obo-unsplash-55192b8a.jpg"
+  width="718"
+  height="404"
+  alt="Kép"
+  sizes="100vw"
+/>
+
+Az általános vélekedéssel ellentétben a Lorem Ipsum nem csak véletlenszerű szöveg. Klasszikus latin irodalmi műből származik, időszámításunk előtt 45-ből, így több mint 2000 éves.
+
+Most mutatok egy példát egy rendezetlen listára, hogy megnézzük, az is jól néz-e ki:
+
+    Ez az első elem a listában.
+
+    Ebben a példában röviden tartjuk az elemeket.
+
+    Később hosszabb, összetettebb listaelemeket is használunk majd.
+
+És ezzel véget is ért ez a szakasz.
+Mi van, ha egymás után jönnek a címsorok?
+
+Gyakran előfordul, hogy két címsor közvetlenül egymás után szerepel. Ilyenkor gyakran el kell távolítani a felső margót a második címsorról, mert így szebben mutatnak együtt, mint amikor egy bekezdés után következik egy címsor.
+Mi történik, ha egy címsor egy bekezdés után jön?
+
+Amikor egy címsor egy bekezdés után következik, kicsit több térre van szükség, ahogy már említettem. Most nézzük meg, hogyan néz ki egy összetettebb lista.
+
+    Gyakran csinálom azt, hogy a listaelemeknek címsoraik vannak.
+    Valamiért szerintem ez menőn néz ki, ami sajnálatos, mert elég bosszantó jól beállítani a stílusokat.
+    Gyakran két vagy három bekezdésem is van ezekben a listaelemekben, így a nehéz rész az, hogy a bekezdések, a listaelem címsora és a különálló listaelemek közötti térközök mind értelmesek legyenek. Őszintén szólva elég kemény, erős érvet lehetne felhozni amellett, hogy egyszerűen nem kellene így írni.
+
+    Mivel ez egy lista, legalább két elemre van szükségem.
+    Az előző listaelemben már elmagyaráztam, mit csinálok, de egy lista nem lenne lista, ha csak egy eleme lenne, és tényleg azt akarjuk, hogy ez valósághűnek tűnjön. Ezért adtam hozzá ezt a második listaelemet.
+
+    Nem rossz ötlet egy harmadik elemet is hozzáadni.
+    Szerintem valószínűleg elég lett volna csak két elemet használni, de a három határozottan nem rosszabb.
+
+Egy ilyen lista után általában van egy záró megjegyzésem vagy bekezdésem, mert kicsit furcsán néz ki közvetlenül egy címsorra ugrani.
+A kódnak alapértelmezés szerint jól kell kinéznie
+
+Szerintem a legtöbb ember highlight.js-t vagy Prism-et vagy valami hasonlót fog használni, ha stilizálni akarja a kódblokkjait, de nem ártana, ha alapból jól néznének ki, még szintaxiskiemelés nélkül is.
+
+Így néz ki egy alapértelmezett tailwind.config.js fájl ezen írás időpontjában:
+
+module.exports = {
+  purge: [],
+  theme: {
+    extend: {},
+  },
+  variants: {},
+  plugins: [],
+};
+
+Remélhetőleg ez elég jól néz ki neked.
+Mi a helyzet a beágyazott listákkal?
+
+A beágyazott listák alapvetően mindig rosszul néznek ki, ezért az olyan szerkesztők, mint a Medium, nem is engedik meg őket, de gondolom, mivel néhányan közületek, meg fogjátok csinálni, nekünk kell viselnünk a terhet, hogy legalább működjön.
+
+    A beágyazott listák ritkán jó ötlet.
+
+        Lehet, hogy úgy érzed, nagyon „rendezett” vagy, de csak egy zavaros alakzatot hozol létre, amit nehéz olvasni.
+
+        A beágyazott navigáció a felhasználói felületeken szintén rossz ötlet, tartsd a dolgokat a lehető leglaposabban.
+
+        Rengeteg mappa beágyazása a forráskódban sem hasznos.
+
+    Mivel több elemre van szükségünk, itt van egy másik.
+
+        Nem vagyok benne biztos, hogy két szintnél mélyebben fogunk-e stilizálni.
+
+        Kettő már túl sok, három garantáltan rossz ötlet.
+
+        Ha négy szintet ágyazol be, börtönben a helyed.
+
+    Két elem nem igazán lista, de a három már jó.
+
+        Megint kérlek, ne ágyazz be listákat, ha azt akarod, hogy az emberek ténylegesen elolvassák a tartalmadat.
+
+        Senki sem akarja ezt nézni.
+
+        Fel vagyok háborodva, hogy ezzel egyáltalán foglalkoznunk kell.
+
+A legbosszantóbb dolog a Markdown listáiban az, hogy az <li> elemek nem kapnak gyerek <p> taget, hacsak nincs több bekezdés a listaelemben. Ez azt jelenti, hogy ezzel a bosszantó helyzettel is törődnöm kell a stilizálás során.
+Vannak más elemek is, amiket stilizálnunk kell
+
+Majdnem elfelejtettem megemlíteni a linkeket, mint például ezt a linket a Tailwind CSS oldalára. Majdnem kékek lettek, de a sötétszürke menőbbnek tűnt.
+
+Még táblázatokat is stilizáltunk, nézd csak:
+Birkózó	Származási hely	Befejező mozdulat
+Bret "The Hitman" Hart	Calgary, AB	Sharpshooter
+Stone Cold Steve Austin	Austin, TX	Stone Cold Stunner
+Randy Savage	Sarasota, FL	Elbow Drop
+Vader	Boulder, CO	Vader Bomb
+Razor Ramon	Chuluota, FL	Razor's Edge
+
+Az inline kód is jól néz ki, például ha <span> elemekről szeretnék beszélni, vagy elmondani neked a jó hírt a @tailwindcss/typography-ról.
+Néha még címsorokban is használok kódot
+
+Habár valószínűleg nem a legjobb ötlet, de ez a "wrap the code blocks in backticks" trükk egész jól működik.
+
+Egy másik dolog, amit régen csináltam, hogy egy linkbe tettem code taget is, mint például itt: tailwindcss/docs. Nem szeretem, hogy aláhúzás jelenik meg a backtick alatt, de ez már túlzott lenne, hogy elkerüljük.
+H4-et még nem használtunk
+
+De most már igen! Kérlek, ne használj h5 vagy h6 elemet, a Medium is csak két címsorszintet enged, nem véletlenül. Őszintén szólva majdnem csináltam egy before pseudo-elemet, ami ordít rád, ha h5 vagy h6-ot használsz.
+
+Alapból nem stilizáljuk őket, mert a h4 elemek már olyan kicsik, hogy gyakorlatilag ugyanolyan nagyok, mint a normál szöveg.

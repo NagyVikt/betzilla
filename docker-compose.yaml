@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - .env:/app/.env
+    networks:
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      # HTTP: redirect to HTTPS
+      - "traefik.http.routers.blog-http.rule=Host(`blog.ranked.hu`)"
+      - "traefik.http.routers.blog-http.entrypoints=http"
+      - "traefik.http.routers.blog-http.middlewares=redirect-to-https@docker"
+      # HTTPS
+      - "traefik.http.routers.blog-https.rule=Host(`blog.ranked.hu`)"
+      - "traefik.http.routers.blog-https.entrypoints=https"
+      - "traefik.http.routers.blog-https.tls=true"
+      - "traefik.http.routers.blog-https.tls.certresolver=letsencrypt"
+      - "traefik.http.services.blog.loadbalancer.server.port=3000"
+      - "coolify.managed=true"
+
+networks:
+  coolify:
+    external: true
