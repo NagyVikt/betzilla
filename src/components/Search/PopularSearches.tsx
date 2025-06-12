@@ -1,15 +1,25 @@
-// components/PopularSearches.tsx
+// components/Search/PopularSearches.tsx
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-interface SearchItem {
+export interface SearchItem {
   label: string;
   imageSrc: string;
   href: string;
 }
 
-const popularSearches: SearchItem[] = [
+interface PopularSearchesProps {
+  /**
+   * Array of search items to display.
+   * If not provided, the component uses a built-in default list.
+   */
+  items?: SearchItem[];
+}
+
+const defaultPopularSearches: SearchItem[] = [
   {
     label: "csirkemáj",
     imageSrc: "/images/popular/csirkemaj.jpg",
@@ -52,7 +62,10 @@ const popularSearches: SearchItem[] = [
   },
 ];
 
-const PopularSearches: React.FC = () => {
+const PopularSearches: React.FC<PopularSearchesProps> = ({ items }) => {
+  // Use provided items or fallback to defaultPopularSearches
+  const list: SearchItem[] = items && items.length > 0 ? items : defaultPopularSearches;
+
   return (
     <section className="w-full mx-auto mt-12 px-4 sm:px-6 lg:px-8">
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
@@ -60,7 +73,7 @@ const PopularSearches: React.FC = () => {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6">
-        {popularSearches.map((item) => (
+        {list.map((item) => (
           <Link key={item.label} href={item.href}>
             <div className="relative h-40 rounded-xl overflow-hidden cursor-pointer shadow-md hover:shadow-lg transition">
               <Image
