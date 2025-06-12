@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { slug as slugify } from "github-slugger";
+import type { Metadata } from "next";
 import BlogDetails from "@/components/Blog/BlogDetails";
 import Tag from "@/components/Elements/Tag";
 import RenderRichBlocks from "@/components/RenderRichBlocks";
@@ -25,8 +26,14 @@ import {
 } from "lucide-react";
 
 // -----------------------------------------------------------------------------
-// Types for local use
+// Types
 // -----------------------------------------------------------------------------
+
+// A single, unified type for page props. Renamed to 'Props' to avoid conflicts.
+type Props = {
+  params: { slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
 interface Ingredient {
   category: string;
@@ -55,11 +62,7 @@ export async function generateStaticParams() {
 }
 
 // 2) generateMetadata: for dynamic metadata (title, description, openGraph, twitter)
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = params;
   const blog = await getBlogBySlug(slug);
   if (!blog) {
@@ -162,13 +165,7 @@ const getStoreLogoUrl = (storeName: string): string => {
 // -----------------------------------------------------------------------------
 
 // Default export: the page component
-type PageParams = { slug: string };
-
-export default async function Page({
-  params,
-}: {
-  params: PageParams;
-}) {
+export default async function Page({ params }: Props) {
   const { slug } = params;
   const blog = (await getBlogBySlug(slug)) as Blog | null;
   if (!blog) {

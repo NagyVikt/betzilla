@@ -49,7 +49,7 @@ export default function HomePage() {
         <section className="relative pt-24 pb-16 text-center px-4 bg-white dark:bg-gray-900">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl sm:text-6xl font-bold mb-4">
-              Oszd meg receptjeidet, vagy találd meg a következő kedvenced!
+              Betzilla
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-8">
               Teljesen ingyen feltöltheted saját receptjeidet, vagy böngészheted és megvásárolhatod mások titkos receptjeit.
