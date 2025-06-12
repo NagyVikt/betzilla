@@ -24,7 +24,10 @@ import {
   PlusCircle,
 } from "lucide-react";
 
-// Define the Ingredient type for the sidebar panel
+// -----------------------------------------------------------------------------
+// Types for local use
+// -----------------------------------------------------------------------------
+
 interface Ingredient {
   category: string;
   name: string;
@@ -33,7 +36,7 @@ interface Ingredient {
   store?: string;
   onSale?: boolean;
 }
-// Define the PreparationStep type for visual steps
+
 interface PreparationStep {
   stepNumber: number;
   title: string;
@@ -41,7 +44,9 @@ interface PreparationStep {
   images: string[];
 }
 
-// 1) generateStaticParams
+// -----------------------------------------------------------------------------
+
+// 1) generateStaticParams: collects all slugs for static generation
 export async function generateStaticParams() {
   const slugs = await getAllBlogSlugs();
   return slugs.map((s: any) => ({
@@ -49,7 +54,7 @@ export async function generateStaticParams() {
   }));
 }
 
-// 2) generateMetadata
+// 2) generateMetadata: for dynamic metadata (title, description, openGraph, twitter)
 export async function generateMetadata({
   params,
 }: {
@@ -57,7 +62,6 @@ export async function generateMetadata({
 }) {
   const { slug } = params;
   const blog = await getBlogBySlug(slug);
-
   if (!blog) {
     return { title: "Recept nem található" };
   }
@@ -69,14 +73,16 @@ export async function generateMetadata({
     ? new Date(blog.updatedAt).toISOString()
     : publishedAt;
 
-  // Determine image URL safely (check possible shapes)
+  // Safely resolve an image URL from banner or fallback to blog.image
   let imageUrl = "";
   if (blog.banner) {
-    // banner might be { src: string } or { data: { attributes: { url: string } } } or { url: string }
     const b = blog.banner as any;
     if (typeof b.src === "string") {
       imageUrl = b.src;
-    } else if (b.data?.attributes?.url && typeof b.data.attributes.url === "string") {
+    } else if (
+      b.data?.attributes?.url &&
+      typeof b.data.attributes.url === "string"
+    ) {
       imageUrl = b.data.attributes.url;
     } else if (typeof b.url === "string") {
       imageUrl = b.url;
@@ -86,7 +92,10 @@ export async function generateMetadata({
     const im = blog.image as any;
     if (typeof im.src === "string") {
       imageUrl = im.src;
-    } else if (im.data?.attributes?.url && typeof im.data.attributes.url === "string") {
+    } else if (
+      im.data?.attributes?.url &&
+      typeof im.data.attributes.url === "string"
+    ) {
       imageUrl = im.data.attributes.url;
     } else if (typeof im.url === "string") {
       imageUrl = im.url;
@@ -116,7 +125,13 @@ export async function generateMetadata({
   };
 }
 
-// Helper: Extract plain text from rich text blocks for JSON-LD
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+/**
+ * Extract plain text from rich-text-like blocks to build JSON-LD lists.
+ */
 const extractTextFromRichText = (blocks: any[] | undefined): string[] => {
   if (!blocks) return [];
   return blocks.flatMap((block: any) =>
@@ -126,40 +141,53 @@ const extractTextFromRichText = (blocks: any[] | undefined): string[] => {
   );
 };
 
-// Helper: get store logo URL
+/**
+ * Return a placeholder logo URL for a given store name, or custom mapping.
+ */
 const getStoreLogoUrl = (storeName: string): string => {
   const storeLogos: { [key: string]: string } = {
     Lidl: "https://placehold.co/80x40/0050aa/ffffff?text=Lidl&font=roboto",
     Tesco: "https://placehold.co/80x40/d1232a/ffffff?text=Tesco&font=roboto",
     Kaufland: "https://placehold.co/80x40/e0001b/ffffff?text=Kaufland&font=roboto",
-    // Add other stores here
+    // Add other stores here if needed
   };
   return (
     storeLogos[storeName] ||
-    `https://placehold.co/80x40/cccccc/000000?text=${encodeURIComponent(storeName)}`
+    `https://placehold.co/80x40/cccccc/000000?text=${encodeURIComponent(
+      storeName
+    )}`
   );
 };
 
-// Main page component
+// -----------------------------------------------------------------------------
+
+// Default export: the page component
+type PageParams = { slug: string };
+
 export default async function Page({
   params,
 }: {
-  params: { slug: string };
+  params: PageParams;
 }) {
   const { slug } = params;
   const blog = (await getBlogBySlug(slug)) as Blog | null;
-
   if (!blog) {
     notFound();
   }
 
-  // JSON-LD recipe schema
+  // ---------------------------------------------------------------------------
+  // JSON-LD Recipe schema
+  // ---------------------------------------------------------------------------
+  // Safely resolve an image URL for JSON-LD (banner or fallback image)
   let recipeImage = "";
   if (blog.banner) {
     const b = blog.banner as any;
     if (typeof b.src === "string") {
       recipeImage = b.src;
-    } else if (b.data?.attributes?.url && typeof b.data.attributes.url === "string") {
+    } else if (
+      b.data?.attributes?.url &&
+      typeof b.data.attributes.url === "string"
+    ) {
       recipeImage = b.data.attributes.url;
     } else if (typeof b.url === "string") {
       recipeImage = b.url;
@@ -169,14 +197,17 @@ export default async function Page({
     const im = blog.image as any;
     if (typeof im.src === "string") {
       recipeImage = im.src;
-    } else if (im.data?.attributes?.url && typeof im.data.attributes.url === "string") {
+    } else if (
+      im.data?.attributes?.url &&
+      typeof im.data.attributes.url === "string"
+    ) {
       recipeImage = im.data.attributes.url;
     } else if (typeof im.url === "string") {
       recipeImage = im.url;
     }
   }
 
-  const jsonLd = {
+  const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Recipe",
     name: blog.title,
@@ -192,15 +223,17 @@ export default async function Page({
       ? (blog.instructions as any[])
           .map((instruction) => {
             if (typeof instruction === "string") return instruction;
-            if (instruction && instruction.children)
+            if (instruction && instruction.children) {
               return extractTextFromRichText([instruction]).join(" ");
+            }
             if (
               typeof instruction === "object" &&
               instruction &&
               "type" in instruction &&
               (instruction as any).type === "list-item"
-            )
+            ) {
               return extractTextFromRichText([instruction]).join(" ");
+            }
             return "";
           })
           .filter(Boolean)
@@ -211,7 +244,10 @@ export default async function Page({
     recipeYield: blog.recipeYield || undefined,
   };
 
-  // Example ingredientsData; adapt or fetch from blog.Ingredients if you have structured data
+  // ---------------------------------------------------------------------------
+  // Example: groupedIngredients and preparationSteps
+  // Replace these example arrays with actual structured data from `blog` if available.
+  // ---------------------------------------------------------------------------
   const ingredientsData: Ingredient[] = [
     {
       category: "A tésztához:",
@@ -277,16 +313,18 @@ export default async function Page({
       store: "Tesco",
     },
   ];
-  const groupedIngredients = ingredientsData.reduce((acc, ingredient) => {
-    const { category } = ingredient;
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(ingredient);
-    return acc;
-  }, {} as Record<string, Ingredient[]>);
+  const groupedIngredients: Record<string, Ingredient[]> = ingredientsData.reduce(
+    (acc, ingredient) => {
+      const { category } = ingredient;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(ingredient);
+      return acc;
+    },
+    {} as Record<string, Ingredient[]>
+  );
 
-  // Example preparationSteps; adapt or fetch from blog data if available
   const preparationSteps: PreparationStep[] = [
     {
       stepNumber: 1,
@@ -394,7 +432,9 @@ export default async function Page({
     },
   ];
 
-  // Macronutrient calculations: coerce to numbers safely
+  // ---------------------------------------------------------------------------
+  // Macronutrient calculations (coerce to numbers safely)
+  // ---------------------------------------------------------------------------
   const proteinNum = blog.protein != null ? Number(blog.protein) : 0;
   const carbsNum = blog.carbs != null ? Number(blog.carbs) : 0;
   const fatNum = blog.fat != null ? Number(blog.fat) : 0;
@@ -415,7 +455,9 @@ export default async function Page({
     ? Math.round((nutritionValues.fat / totalMacros) * 100)
     : 0;
 
+  // ---------------------------------------------------------------------------
   // Banner image / fallback color
+  // ---------------------------------------------------------------------------
   let bannerImageUrl = "";
   if (blog.banner) {
     const b = blog.banner as any;
@@ -432,7 +474,9 @@ export default async function Page({
   }
   const fallbackBannerColor = "bg-pink-400";
 
-  // totalTime: coerce prepTime and cookTime to number if needed
+  // ---------------------------------------------------------------------------
+  // totalTime calculation from prepTime + cookTime if totalTime missing or invalid
+  // ---------------------------------------------------------------------------
   let totalTimeValue: number | null = null;
   const prepNum = blog.prepTime != null ? Number(blog.prepTime) : NaN;
   const cookNum = blog.cookTime != null ? Number(blog.cookTime) : NaN;
@@ -444,7 +488,9 @@ export default async function Page({
     totalTimeValue = null;
   }
 
+  // ---------------------------------------------------------------------------
   // Table of Contents items
+  // ---------------------------------------------------------------------------
   const tocItems = [
     { href: "#section-leiras", label: "Leírás", dataField: blog.content },
     { href: "#section-osszefoglalo", label: "Összefoglaló", dataField: true },
@@ -453,28 +499,30 @@ export default async function Page({
     { href: "#section-tapertek", label: "Tápérték", dataField: blog.nutritioninfo },
   ];
 
-  // Coerce rating to number for StarRating
-  const ratingNum =
-    blog.rating != null ? Number(blog.rating) : 0;
+  // ---------------------------------------------------------------------------
+  // StarRating initial rating
+  // ---------------------------------------------------------------------------
+  const ratingNum = blog.rating != null ? Number(blog.rating) : 0;
   const initialRatingValue = isNaN(ratingNum) ? 0 : ratingNum;
 
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
   return (
     <>
-      {/* Inject JSON-LD into <head> */}
+      {/* JSON-LD injected into head */}
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Mobile TOC bubbles */}
+      {/* Mobile TOC / Sidebar and ScrollProgressHeader */}
       <TocSidebar items={tocItems} totalTime={totalTimeValue} slug={slug} />
-
-      {/* ScrollProgressHeader now accepts slug prop */}
       <ScrollProgressHeader slug={slug} />
 
       <main className="mx-auto mt-10 md:mt-10 px-0 sm:px-6 lg:px-8 lg:pl-8">
-        {/* 1) Banner Section */}
+        {/* ===================== Banner Section ===================== */}
         <div className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] w-full md:rounded-xl overflow-hidden shadow-2xl mb-8">
           {bannerImageUrl ? (
             <Image
@@ -516,7 +564,6 @@ export default async function Page({
           </div>
           <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
             <div className="flex items-center space-x-4 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 shadow-lg">
-              {/* Pass a number */}
               <StarRating slug={slug} initialRating={initialRatingValue} />
               <span className="text-gray-800 font-medium text-sm">
                 Átlag: {initialRatingValue}/5
@@ -525,14 +572,14 @@ export default async function Page({
           </div>
         </div>
 
-        {/* 2) BlogDetails Section */}
+        {/* ===================== BlogDetails Section ===================== */}
         <div className="px-4 sm:px-0">
           <BlogDetails blog={blog} slug={slug} />
         </div>
 
-        {/* 3) Grid Layout */}
+        {/* ===================== Grid Layout: Ingredients | Content | Gallery ===================== */}
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 px-4 sm:px-0">
-          {/* Left Column: Ingredients Panel */}
+          {/* --------- Left Column: Ingredients Panel --------- */}
           <aside className="lg:col-span-3">
             <div className="sticky top-24">
               <div className="rounded-xl shadow-lg overflow-hidden">
@@ -583,7 +630,7 @@ export default async function Page({
                       </ul>
                     </div>
                   ))}
-                  <button className="w-full mt-6 bg-pink-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition-colors">
+                  <button className="w-full mt-6 bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition-colors">
                     Mentés listába <ChevronRight className="h-5 w-5 ml-2" />
                   </button>
                 </div>
@@ -596,7 +643,7 @@ export default async function Page({
             </div>
           </aside>
 
-          {/* Center Content Area */}
+          {/* --------- Center Column: Main Content --------- */}
           <div className="lg:col-span-6 space-y-12">
             {/* Leírás Section */}
             {blog.content &&
@@ -890,7 +937,7 @@ export default async function Page({
               )}
           </div>
 
-          {/* Right Column: Gallery */}
+          {/* --------- Right Column: Gallery --------- */}
           <aside className="lg:col-span-3">
             {Array.isArray(blog.images) && blog.images.length > 0 ? (
               <div
