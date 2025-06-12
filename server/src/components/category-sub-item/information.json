@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_category_sub_item_information",
+  "info": {
+    "displayName": "information"
+  },
+  "options": {},
+  "attributes": {
+    "Information": {
+      "type": "component",
+      "component": "category.information-category",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

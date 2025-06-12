@@ -17,16 +17,6 @@
     "description": {
       "type": "string"
     },
-    "photo": {
-      "type": "media",
-      "multiple": true,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
-    },
     "slug": {
       "type": "uid",
       "targetField": "name"

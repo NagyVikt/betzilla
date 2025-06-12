@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_home_homes",
+  "info": {
+    "displayName": "home"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "url": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

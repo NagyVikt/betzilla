@@ -1,28 +1,71 @@
-version: '3.8'
-
-services:
-  web:
-    build: .
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - .env:/app/.env
-    networks:
-      - coolify
-    labels:
-      - "traefik.enable=true"
-      # HTTP: redirect to HTTPS
-      - "traefik.http.routers.blog-http.rule=Host(`blog.ranked.hu`)"
-      - "traefik.http.routers.blog-http.entrypoints=http"
-      - "traefik.http.routers.blog-http.middlewares=redirect-to-https@docker"
-      # HTTPS
-      - "traefik.http.routers.blog-https.rule=Host(`blog.ranked.hu`)"
-      - "traefik.http.routers.blog-https.entrypoints=https"
-      - "traefik.http.routers.blog-https.tls=true"
-      - "traefik.http.routers.blog-https.tls.certresolver=letsencrypt"
-      - "traefik.http.services.blog.loadbalancer.server.port=3000"
-      - "coolify.managed=true"
+version: "3.8"
 
 networks:
   coolify:
     external: true
+
+services:
+  # Next.js frontend
+  betzilla-frontend:
+    image: betzilla-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile       # refers to client/Dockerfile
+    container_name: betzilla-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: "https://strapi.betzilla.hu"
+    networks:
+      - coolify
+    labels:
+      - "traefik.enable=true"
+      # HTTP → HTTPS redirect
+      - "traefik.http.routers.frontend-http.rule=Host(`betzilla.hu`) || Host(`www.betzilla.hu`)"
+      - "traefik.http.routers.frontend-http.entrypoints=http"
+      - "traefik.http.routers.frontend-http.middlewares=redirect-to-https@docker"
+      # HTTPS
+      - "traefik.http.routers.frontend.rule=Host(`betzilla.hu`) || Host(`www.betzilla.hu`)"
+      - "traefik.http.routers.frontend.entrypoints=https"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+      - "coolify.managed=true"
+
+  # Strapi backend
+  betzilla-strapi:
+    image: betzilla-strapi:latest
+    build:
+      context: server            # refers to client/server/
+      dockerfile: Dockerfile     # refers to client/server/Dockerfile
+    container_name: betzilla-strapi
+    restart: unless-stopped
+    networks:
+      - coolify
+    environment:
+      NODE_ENV: production
+      # Inject Strapi DB and secret env vars here or via Coolify UI:
+      # DATABASE_CLIENT: ...
+      # DATABASE_HOST: ...
+      # DATABASE_PORT: "5432"
+      # DATABASE_NAME: ...
+      # DATABASE_USERNAME: ...
+      # DATABASE_PASSWORD: ...
+      # STRAPI_ADMIN_JWT_SECRET: ...
+      # APP_KEYS, API_TOKEN_SALT, etc.
+    labels:
+      - "traefik.enable=true"
+      # HTTP → HTTPS for strapi.betzilla.hu
+      - "traefik.http.routers.strapi-http.rule=Host(`strapi.betzilla.hu`)"
+      - "traefik.http.routers.strapi-http.entrypoints=http"
+      - "traefik.http.routers.strapi-http.middlewares=redirect-to-https@docker"
+      # HTTPS router for strapi.betzilla.hu
+      - "traefik.http.routers.strapi.rule=Host(`strapi.betzilla.hu`)"
+      - "traefik.http.routers.strapi.entrypoints=https"
+      - "traefik.http.routers.strapi.tls=true"
+      - "traefik.http.routers.strapi.tls.certresolver=letsencrypt"
+      - "traefik.http.services.strapi.loadbalancer.server.port=3000"
+      - "coolify.managed=true"
+    # Optional volumes for uploads persistence:
+    # volumes:
+    #   - ./server/public/uploads:/app/public/uploads

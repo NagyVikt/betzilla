@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_category_information_categories",
+  "info": {
+    "displayName": "InformationCategory"
+  },
+  "options": {},
+  "attributes": {
+    "category": {
+      "type": "string"
+    },
+    "value": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

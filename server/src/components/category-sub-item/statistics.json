@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_category_sub_item_statistics",
+  "info": {
+    "displayName": "statistics",
+    "icon": "pin"
+  },
+  "options": {},
+  "attributes": {
+    "statisctics": {
+      "type": "component",
+      "component": "category-sub-item.staticstis1",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

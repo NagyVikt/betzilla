@@ -1,6 +1,6 @@
-// Removed import Link from "next/link"; as it's not available in this environment.
-// For a Next.js project, you would use the Link component for client-side navigation.
-// import Link from "next/link";
+// src/app/not-found.tsx
+
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -21,7 +21,10 @@ export default function NotFound() {
           <circle cx="125" cy="50" r="10" fill="currentColor" />
           <circle cx="118" cy="45" r="8" fill="currentColor" />
           {/* Body */}
-          <path d="M70 90 Q100 130 130 90 L130 150 Q100 160 70 150 Z" fill="currentColor" />
+          <path
+            d="M70 90 Q100 130 130 90 L130 150 Q100 160 70 150 Z"
+            fill="currentColor"
+          />
           {/* Glasses */}
           <circle cx="90" cy="60" r="8" stroke="gray" strokeWidth="2" fill="none" />
           <circle cx="110" cy="60" r="8" stroke="gray" strokeWidth="2" fill="none" />
@@ -30,9 +33,16 @@ export default function NotFound() {
           <line x1="90" y1="50" x2="95" y2="45" stroke="gray" strokeWidth="1.5" />
           <line x1="110" y1="50" x2="105" y2="45" stroke="gray" strokeWidth="1.5" />
           {/* Magnifying glass */}
-          <circle cx="60" cy="110" r="15" stroke="gray" strokeWidth="3" fill="rgba(200,200,255,0.3)" />
+          <circle
+            cx="60"
+            cy="110"
+            r="15"
+            stroke="gray"
+            strokeWidth="3"
+            fill="rgba(200,200,255,0.3)"
+          />
           <line x1="50" y1="125" x2="40" y2="135" stroke="gray" strokeWidth="3" />
-           {/* Question mark */}
+          {/* Question mark */}
           <text
             x="150"
             y="70"
@@ -45,23 +55,27 @@ export default function NotFound() {
           </text>
         </svg>
 
-        <h1 className={`inline-block text-dark dark:text-light
-          text-6xl font-bold w-full capitalize xl:text-8xl text-center`}>404</h1>
-        <h2 className={`inline-block text-dark dark:text-light
-          text-4xl sm:text-5xl font-bold w-full  xl:text-6xl text-center mt-4 tracking-wide leading-snug`}>
+        <h1
+          className={`inline-block text-dark dark:text-light text-6xl font-bold w-full capitalize xl:text-8xl text-center`}
+        >
+          404
+        </h1>
+        <h2
+          className={`inline-block text-dark dark:text-light text-4xl sm:text-5xl font-bold w-full xl:text-6xl text-center mt-4 tracking-wide leading-snug`}
+        >
           Ezt a receptet még a nagyi sem találja!
         </h2>
-        {/* Replaced Next.js Link with a standard <a> tag for compatibility in this environment. */}
-        <a
+
+        {/* Use Next.js Link for client-side navigation */}
+        <Link
           href="/"
           className="self-center mt-8 inline-block rounded-lg border-2 border-solid bg-dark px-4 py-2
             font-semibold text-light hover:border-dark hover:bg-light hover:text-dark
             dark:bg-light dark:text-dark hover:dark:bg-dark hover:dark:text-light hover:dark:border-light
-            transition-colors duration-200 ease-in-out
-          "
+            transition-colors duration-200 ease-in-out"
         >
           Vissza a főoldalra
-        </a>
+        </Link>
       </div>
     </main>
   );

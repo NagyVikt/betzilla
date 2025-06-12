@@ -462,8 +462,45 @@ export interface ApiCategoryCategory extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    subItems: Schema.Attribute.Component<'category-sub-item.sub-items', false>;
     title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMatchMatch extends Struct.CollectionTypeSchema {
+  collectionName: 'matches';
+  info: {
+    displayName: 'Match';
+    pluralName: 'matches';
+    singularName: 'match';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    away: Schema.Attribute.Component<'away.away', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.DateTime;
+    home: Schema.Attribute.Component<'home.home', false>;
+    information: Schema.Attribute.Component<
+      'category-sub-item.information',
+      false
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::match.match'> &
+      Schema.Attribute.Private;
+    matchId: Schema.Attribute.String;
+    MatchStatus: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    result: Schema.Attribute.Component<'result.resultss', false>;
+    statistics: Schema.Attribute.Component<
+      'category-sub-item.statistics',
+      false
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -523,10 +560,6 @@ export interface ApiTeamMemberTeamMember extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String;
-    photo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -1047,6 +1080,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::banner.banner': ApiBannerBanner;
       'api::category.category': ApiCategoryCategory;
+      'api::match.match': ApiMatchMatch;
       'api::popular-searche.popular-searche': ApiPopularSearchePopularSearche;
       'api::team-member.team-member': ApiTeamMemberTeamMember;
       'plugin::content-releases.release': PluginContentReleasesRelease;

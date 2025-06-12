@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_result_resultsses",
+  "info": {
+    "displayName": "Resultss"
+  },
+  "options": {},
+  "attributes": {
+    "home": {
+      "type": "integer"
+    },
+    "away": {
+      "type": "integer"
+    },
+    "regulationTime": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

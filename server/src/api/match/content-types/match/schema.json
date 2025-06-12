@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "matches",
+  "info": {
+    "singularName": "match",
+    "pluralName": "matches",
+    "displayName": "Match"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "matchId": {
+      "type": "string"
+    },
+    "date": {
+      "type": "datetime"
+    },
+    "MatchStatus": {
+      "type": "string"
+    },
+    "home": {
+      "type": "component",
+      "component": "home.home",
+      "repeatable": false
+    },
+    "away": {
+      "type": "component",
+      "component": "away.away",
+      "repeatable": false
+    },
+    "result": {
+      "type": "component",
+      "component": "result.resultss",
+      "repeatable": false
+    },
+    "information": {
+      "type": "component",
+      "component": "category-sub-item.information",
+      "repeatable": false
+    },
+    "statistics": {
+      "type": "component",
+      "component": "category-sub-item.statistics",
+      "repeatable": false
+    }
+  }
+}

@@ -4,3 +4,14 @@ Dockerfile
 docker-compose.yml
 .git
 .next
+
+
+dist
+.vscode
+*.log
+
+server
+.strapi
+.tmp
+
+.env

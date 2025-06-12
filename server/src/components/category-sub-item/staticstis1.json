@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_category_sub_item_staticstis1s",
+  "info": {
+    "displayName": "Staticstis1"
+  },
+  "options": {},
+  "attributes": {
+    "category": {
+      "type": "string"
+    },
+    "homeValue": {
+      "type": "string"
+    },
+    "awayValue": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
